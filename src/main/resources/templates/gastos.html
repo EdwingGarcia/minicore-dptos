@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gastos por Departamento</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">Gastos por Departamento</h1>
+    <form method="get" th:action="@{/gastos/filtrar-deptos}" class="mt-4">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="startDate" class="form-label">Fecha de Inicio:</label>
+                <input type="date" id="startDate" name="startDate" class="form-control" th:value="${startDate}" required>
+            </div>
+            <div class="col-md-4">
+                <label for="endDate" class="form-label">Fecha de Fin:</label>
+                <input type="date" id="endDate" name="endDate" class="form-control" th:value="${endDate}" required>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Mostrar las fechas filtradas -->
+    <div th:if="${startDate != null and endDate != null}">
+        <h3 class="mt-4">Rango de Fechas: <span th:text="${startDate}"></span> a <span th:text="${endDate}"></span></h3>
+    </div>
+
+    <!-- Tabla para mostrar los resultados -->
+    <div th:if="${gastos != null}">
+        <h2 class="mt-5">Resultados</h2>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Departamento</th>
+                <th>Suma de Gastos</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${gastos}">
+                <td th:text="${entry.key.nombre}">Nombre del Departamento</td>
+                <td th:text="${entry.value}">Suma de Gastos</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mensaje si no hay resultados -->
+    <div th:if="${gastos != null and #lists.isEmpty(gastos)}">
+        <p class="text-center mt-4 text-danger">No se encontraron gastos en el rango de fechas especificado.</p>
+    </div>
+</div>
+</body>
+</html>
